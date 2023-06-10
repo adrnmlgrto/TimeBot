@@ -1,4 +1,5 @@
 import discord
+from discord import Embed
 
 from .response import process_message
 
@@ -36,9 +37,23 @@ class TimeBot(discord.Client):
             if status:
                 sender = data.get('author')
                 unix_ts = data.get('unix_timestamp')
-                await message.channel.send(
-                    f'On {sender}\'s message, that time would be: '
-                    f'<t:{unix_ts}:t> on your local time zone.'
+                orig_time_str = data.get('original_time_string')
+
+                # Replace the original time string with the Unix timestamp
+                formatted_message = message.content.replace(orig_time_str,
+                                                            f"<t:{unix_ts}:t>")
+
+                # Create an embed
+                embed = Embed(
+                    description=f'{formatted_message}',
+                    color=0xeeb8c4
                 )
+                # Set the author field with the
+                # message sender's icon and nickname
+                embed.set_author(name=sender,
+                                 icon_url=message.author.avatar.url)
+                # Send the embed to the channel
+                await message.channel.send(embed=embed)
+
         except Exception as e:
-            print(f'An error occured when getting response message: {str(e)}')
+            print(f'An error occurred when getting response message: {str(e)}')

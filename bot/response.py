@@ -20,7 +20,8 @@ def process_message(author: str,
         # Construct a response message
         response = True, {
             'author': author,
-            'unix_timestamp': unix_timestamp
+            'unix_timestamp': unix_timestamp,
+            'original_time_string': time_string
         }
         return response
 
