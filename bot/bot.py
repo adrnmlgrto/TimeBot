@@ -1,7 +1,12 @@
+import logging
+
 import discord
 from discord import Embed
 
 from .response import process_message
+
+# Configure the logger
+logger = logging.getLogger(__name__)
 
 __all__ = ['TimeBot']
 
@@ -55,5 +60,18 @@ class TimeBot(discord.Client):
                 # Send the embed to the channel
                 await message.channel.send(embed=embed)
 
+        except ValueError:
+            await message.channel.send('U-uhm, your time format '
+                                       'may be i-incorrect..')
+            # Sending a GIF using a URL
+            gif_url = ('https://media.tenor.com/'
+                       'q3H6BzODyJAAAAAC/bocchi-bocchi-the-rock.gif')
+            await message.channel.send(gif_url)
         except Exception as e:
-            print(f'An error occurred when getting response message: {str(e)}')
+            logging.exception(f'An error occurred when '
+                              f'processing the message: {e}')
+            await message.channel.send('aaAAaaAAAAAAaAAAAAAAAaAAA')
+            # Sending a GIF using a URL
+            gif_url = ('https://media.tenor.com/'
+                       'e046riJYwWwAAAAC/bocchi-bocchi-the-rock.gif')
+            await message.channel.send(gif_url)
