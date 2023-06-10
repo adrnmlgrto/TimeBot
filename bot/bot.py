@@ -1,16 +1,8 @@
 import discord
-import os
+
 from .response import process_message
 
-from dotenv import load_dotenv
-
-# Loading the environment variables from `.env` file.
-load_dotenv()
-
-__all__ = ['TimeBot', 'TOKEN']
-
-# Getting the token from the `.env` file.
-TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+__all__ = ['TimeBot']
 
 # Defining the intents
 intents = discord.Intents.default()

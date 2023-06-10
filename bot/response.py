@@ -33,7 +33,7 @@ def process_message(author: str, content: str):
         # Construct a response message
         response = (
             f'On {author}\'s message, that time will be: '
-            f'<t:{unix_timestamp}:t>. REEEEEEEEEEEE'
+            f'<t:{unix_timestamp}:t>.'
         )
         return response
 
