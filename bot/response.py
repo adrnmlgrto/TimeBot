@@ -1,40 +1,27 @@
 import re
-from datetime import datetime
+from typing import Tuple, Union
 
-import pytz
-from tzlocal import get_localzone
+from bot.helpers import convert_to_utc_then_unix
 
 # Define regular expression pattern to find time information
 time_pattern = re.compile(r'\b\d{1,2}:\d{2}\s*(?:AM|PM)?\b', re.IGNORECASE)
 
 
-def process_message(author: str, content: str):
+def process_message(author: str,
+                    content: str) -> Tuple[bool, Union[dict, str]]:
     # Extract time from the message
     match = time_pattern.search(content)
     if match:
         time_string = match.group()
 
-        # Get the local time zone
-        local_tz = get_localzone()
-
-        # Convert time string to local datetime
-        current_datetime = datetime.now(local_tz)
-        time_obj = datetime.strptime(time_string, '%I:%M %p')
-        local_datetime = current_datetime.replace(
-            hour=time_obj.hour, minute=time_obj.minute, second=0, microsecond=0
-        )
-
-        # Convert local datetime to UTC datetime
-        utc_datetime = local_datetime.astimezone(pytz.UTC)
-
-        # Generate UNIX timestamp
-        unix_timestamp = int(utc_datetime.timestamp())
+        # Generate UNIX time for response
+        unix_timestamp = convert_to_utc_then_unix(time_str=time_string)
 
         # Construct a response message
-        response = (
-            f'On {author}\'s message, that time will be: '
-            f'<t:{unix_timestamp}:t>.'
-        )
+        response = True, {
+            'author': author,
+            'unix_timestamp': unix_timestamp
+        }
         return response
 
-    return None
+    return False, ''

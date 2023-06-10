@@ -31,9 +31,14 @@ class TimeBot(discord.Client):
                 nickname = message.author.name
 
             # Checking if the message contains time information and respond
-            response_msg = process_message(nickname, message.content)
+            status, data = process_message(nickname, message.content)
 
-            if response_msg:
-                await message.channel.send(response_msg)
+            if status:
+                sender = data.get('author')
+                unix_ts = data.get('unix_timestamp')
+                await message.channel.send(
+                    f'On {sender}\'s message, that time would be: '
+                    f'<t:{unix_ts}:t> on your local time zone.'
+                )
         except Exception as e:
             print(f'An error occured when getting response message: {str(e)}')
